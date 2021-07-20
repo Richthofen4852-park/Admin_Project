@@ -1,9 +1,16 @@
 package com.fastcampus.javaallinone.project3.demo.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 
+@Getter @Setter
+@ToString
 @Entity
 public class Person {
 
@@ -14,37 +21,18 @@ public class Person {
     private String name;
 
     private int age;
+    
+    private String hobby;
 
-    public Long getId() {
-        return id;
-    }
+    private String bloodType;
+    
+    private String address;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private LocalDate birthday;
 
-    public String getName() {
-        return name;
-    }
+    private String job;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @ToString.Exclude
+    private String phoneNumber;
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
 }
