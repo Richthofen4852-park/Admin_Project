@@ -2,11 +2,12 @@ package com.fastcampus.javaallinone.project3.demo.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
@@ -39,6 +40,7 @@ public class Person {
     @ToString.Exclude
     private String phoneNumber;
 
-    @OneToOne
+    @OneToOne(cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Block block;
 }
