@@ -1,8 +1,10 @@
 package com.fastcampus.javaallinone.project3.demo.domain;
 
+import com.fastcampus.javaallinone.project3.demo.domain.dto.Birthday;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 import static javax.persistence.CascadeType.*;
@@ -33,7 +35,9 @@ public class Person {
     
     private String address;
 
-    private LocalDate birthday;
+    @Valid
+    @Embedded
+    private Birthday birthday;
 
     private String job;
 
