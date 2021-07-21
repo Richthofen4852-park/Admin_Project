@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
 
+
 }
