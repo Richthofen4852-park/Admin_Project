@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Person {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @NonNull
