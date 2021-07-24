@@ -13,6 +13,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
+import static java.time.LocalDate.now;
+import static javax.persistence.AccessType.FIELD;
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -34,10 +36,6 @@ public class Person {
     @NotEmpty
     @Column(nullable = false)
     private String name;
-
-    @NonNull
-    @Min(1)
-    private int age;
     
     private String hobby;
 
@@ -65,8 +63,6 @@ public class Person {
     private Block block;
 
     public void set(PersonDto personDto) {
-        if(personDto.getAge() != 0)
-            this.setAge(personDto.getAge());
 
         if(!StringUtils.isEmpty(personDto.getHobby()))
             this.setHobby(personDto.getHobby());
@@ -82,5 +78,19 @@ public class Person {
 
         if(!StringUtils.isEmpty(personDto.getPhoneNumber()))
             this.setPhoneNumber(personDto.getPhoneNumber());
+    }
+
+    @Access(FIELD)
+    public Integer getAge() {
+
+        if(this.birthday != null)
+            return now().getYear() - this.birthday.getYearOfBirthday() + 1;
+        else
+            return null;
+    }
+
+    @Access(FIELD)
+    public boolean isBirthdayToday() {
+        return now().equals(LocalDate.of(this.birthday.getYearOfBirthday(), this.birthday.getMonthOfBirthday(), this.birthday.getDayOfBirthday()));
     }
 }
