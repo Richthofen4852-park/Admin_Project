@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
+import static com.fastcampus.javaallinone.project3.demo.domain.dto.Birthday.of;
 import static java.time.LocalDate.now;
 import static javax.persistence.AccessType.FIELD;
 import static javax.persistence.CascadeType.*;
@@ -36,13 +37,8 @@ public class Person {
     @NotEmpty
     @Column(nullable = false)
     private String name;
-    
-    private String hobby;
 
-    @NonNull
-    @NotEmpty
-    @Column(nullable = false)
-    private String bloodType;
+    private String hobby;
     
     private String address;
 
@@ -52,23 +48,15 @@ public class Person {
 
     private String job;
 
-    @ToString.Exclude
     private String phoneNumber;
 
     @ColumnDefault("0")
     private boolean deleted;
 
-    @OneToOne(cascade = ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private Block block;
-
     public void set(PersonDto personDto) {
 
         if(!StringUtils.isEmpty(personDto.getHobby()))
             this.setHobby(personDto.getHobby());
-
-        if(!StringUtils.isEmpty(personDto.getBloodType()))
-            this.setBloodType(personDto.getBloodType());
 
         if(!StringUtils.isEmpty(personDto.getAddress()))
             this.setAddress(personDto.getAddress());
@@ -78,6 +66,10 @@ public class Person {
 
         if(!StringUtils.isEmpty(personDto.getPhoneNumber()))
             this.setPhoneNumber(personDto.getPhoneNumber());
+
+        if(personDto.getBirthday() != null) {
+            this.setBirthday(of(personDto.getBirthday()));
+        }
     }
 
     @Access(FIELD)
