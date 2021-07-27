@@ -70,6 +70,7 @@ public class Person {
         if(personDto.getBirthday() != null) {
             this.setBirthday(of(personDto.getBirthday()));
         }
+
     }
 
     @Access(FIELD)

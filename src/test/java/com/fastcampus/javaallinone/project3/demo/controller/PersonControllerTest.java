@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,8 +65,8 @@ class PersonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("martin"))
-                .andExpect(jsonPath("hobby").isEmpty())
-                .andExpect(jsonPath("address").isEmpty())
+                .andExpect(jsonPath("$.hobby").isEmpty())
+                .andExpect(jsonPath("$.address").isEmpty())
                 .andExpect(jsonPath("$.birthday").value("1991-08-15"))
                 .andExpect(jsonPath("$.job").isEmpty())
                 .andExpect(jsonPath("$.phoneNumber").isEmpty())
@@ -76,16 +78,25 @@ class PersonControllerTest {
 
     @Test
     void postPerson() throws Exception {
+
+        PersonDto dto = PersonDto.of("martin", "programming", "판교", now(), "programmer", "010-1111-2222");
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/person")
                         .contentType(APPLICATION_JSON_UTF8)
-                        .content("{\n"
-                        +"  \"name\": \"martin2\", \n"
-                        +" \"age\": 20, \n"
-                        +" \"bloodType\": \"A\"\n"
-                        +"}"))
+                        .content(toJsonString(dto)))
                 .andDo(print())
                 .andExpect(status().isCreated());
+
+        Person result = personRepository.findAll(Sort.by(DESC, "id")).get(0);
+
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getHobby()).isEqualTo("programming"),
+                () -> assertThat(result.getAddress()).isEqualTo("판교"),
+                () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(now())),
+                () -> assertThat(result.getJob()).isEqualTo("programmer"),
+                () -> assertThat(result.getPhoneNumber()).isEqualTo("010-1111-2222")
+        );
     }
 
     @Test
