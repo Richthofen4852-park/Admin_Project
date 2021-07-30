@@ -50,19 +50,4 @@ public class PersonController {
         personService.delete(id);
     }
 
-    @ExceptionHandler(value = RenameNotPermitException.class)
-    public ResponseEntity<ErrorResponse> handleRenameNoPermittedException(RenameNotPermitException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(BAD_REQUEST, ex.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = PersonNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlePersonNotFoundException(PersonNotFoundException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(BAD_REQUEST, ex.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
-        log.error("서버오류 : {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(ErrorResponse.of(INTERNAL_SERVER_ERROR, "알 수 없는 서버 오류가 발생하였습니다"), INTERNAL_SERVER_ERROR);
-    }
 }
