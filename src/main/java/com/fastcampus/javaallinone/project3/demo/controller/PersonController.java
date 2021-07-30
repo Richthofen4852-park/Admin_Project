@@ -2,14 +2,19 @@ package com.fastcampus.javaallinone.project3.demo.controller;
 
 import com.fastcampus.javaallinone.project3.demo.controller.dto.PersonDto;
 import com.fastcampus.javaallinone.project3.demo.domain.Person;
+import com.fastcampus.javaallinone.project3.demo.exception.PersonNotFoundException;
+import com.fastcampus.javaallinone.project3.demo.exception.RenameNotPermitException;
+import com.fastcampus.javaallinone.project3.demo.exception.dto.ErrorResponse;
 import com.fastcampus.javaallinone.project3.demo.repository.PersonRepository;
 import com.fastcampus.javaallinone.project3.demo.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestController
@@ -18,9 +23,6 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
-
-    @Autowired
-    private PersonRepository personRepository;
 
     @GetMapping("{id}")
     public Person getPerson(@PathVariable Long id) {
@@ -46,5 +48,21 @@ public class PersonController {
     @DeleteMapping("{id}")
     public void deletePerson(@PathVariable Long id) {
         personService.delete(id);
+    }
+
+    @ExceptionHandler(value = RenameNotPermitException.class)
+    public ResponseEntity<ErrorResponse> handleRenameNoPermittedException(RenameNotPermitException ex) {
+        return new ResponseEntity<>(ErrorResponse.of(BAD_REQUEST, ex.getMessage()), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = PersonNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePersonNotFoundException(PersonNotFoundException ex) {
+        return new ResponseEntity<>(ErrorResponse.of(BAD_REQUEST, ex.getMessage()), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+        log.error("서버오류 : {}", ex.getMessage(), ex);
+        return new ResponseEntity<>(ErrorResponse.of(INTERNAL_SERVER_ERROR, "알 수 없는 서버 오류가 발생하였습니다"), INTERNAL_SERVER_ERROR);
     }
 }
