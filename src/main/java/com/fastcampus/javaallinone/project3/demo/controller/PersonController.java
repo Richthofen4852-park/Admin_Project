@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
@@ -31,7 +33,7 @@ public class PersonController {
 
     @PostMapping("")
     @ResponseStatus(CREATED)
-    public void postPerson(@RequestBody PersonDto personDto) {
+    public void postPerson(@RequestBody @Valid PersonDto personDto) {
         personService.put(personDto);
     }
 
